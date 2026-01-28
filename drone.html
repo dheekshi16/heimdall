@@ -1,0 +1,73 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Drone Dashboard | Project Heimdall</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../icon.jpg" type="image/png" />
+
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-container">
+    <h1 class="neon-glow">Drone Management Dashboard</h1>
+
+    <!-- Upload Missing Person -->
+    <div class="card glass-card">
+      <h2>Missing Person Detection</h2>
+      <p>Uploaded by Event Organizers:</p>
+      <img id="missingImage" src="https://via.placeholder.com/150x150?text=Missing+Person" alt="Missing Person" class="drone-image" style="width: 150px; height: 150px; border-radius: 10px; border: 3px solid #00ffd5;">
+      <button class="glow-button">Track with Drone</button>
+    </div>
+
+    <!-- Drone Live Feed -->
+    <div class="card glass-card">
+      <h2>Live Drone Feeds</h2>
+      <ul>
+        <li><a href="#">Drone 1 - Scanning Zone A</a></li>
+        <li><a href="#">Drone 2 - VIP Crowd Aerial</a></li>
+        <li><a href="#">Drone 3 - Lost Person Tracker</a></li>
+      </ul>
+    </div>
+
+    <!-- Drone Flight Control (Mocked) -->
+    <div class="card glass-card">
+      <h2>Drone Navigation Panel</h2>
+      <p>Select a drone to manually navigate:</p>
+      <select class="neon-input">
+        <option>Drone 1</option>
+        <option>Drone 2</option>
+        <option>Drone 3</option>
+      </select>
+      <button class="glow-button">Start Manual Flight</button>
+    </div>
+
+    <!-- Drone Alerts -->
+    <div class="card glass-card">
+      <h2>Auto Alerts & Tracking</h2>
+      <ul>
+        <li>🛸 Drone 3 locked on missing person - tracking...</li>
+        <li>📍 Drone 1 detected abnormal crowd density</li>
+        <li>✅ Drone 2 completed perimeter scan</li>
+      </ul>
+    </div>
+
+    <!-- Communication Panel -->
+    <div class="card glass-card">
+      <h2>Communication Panel</h2>
+      <textarea placeholder="Message to Organizers or Emergency..." class="neon-input" rows="3"></textarea>
+      <button class="glow-button">Send</button>
+    </div>
+  </div>
+
+  <!-- Script to Load Missing Person Image -->
+  <script>
+    window.onload = function () {
+      const img = localStorage.getItem("missingPersonImage");
+      if (img) {
+        document.getElementById("missingImage").src = img;
+      }
+    };
+  </script>
+</body>
+</html>

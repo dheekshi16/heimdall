@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Emergency Dashboard | Project Heimdall</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../icon.jpg" type="image/png" />
+
+
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-container">
+    <h1 class="neon-glow">Emergency Management Dashboard</h1>
+
+    <!-- Live Incident Feed -->
+    <div class="card glass-card">
+      <h2>Live Incident Feed</h2>
+      <ul>
+        <li>🚑 Medical emergency near Stage - Ambulance dispatched</li>
+        <li>🔥 Smoke detected at food court - Fire crew alerted</li>
+        <li>⚠️ Suspicious bag found at Gate B - Security notified</li>
+      </ul>
+    </div>
+
+    <!-- Assign Response Units -->
+    <div class="card glass-card">
+      <h2>Dispatch Units</h2>
+      <label for="incidentSelect">Select Incident:</label>
+      <select id="incidentSelect" class="neon-input">
+        <option>Medical - Stage</option>
+        <option>Fire - Food Court</option>
+        <option>Suspicious Bag - Gate B</option>
+      </select>
+      <label for="unitSelect">Assign Unit:</label>
+      <select id="unitSelect" class="neon-input">
+        <option>Ambulance 1</option>
+        <option>Fire Crew 2</option>
+        <option>Rapid Response Team 3</option>
+      </select>
+      <button class="glow-button">Dispatch</button>
+    </div>
+
+    <!-- Live Tracking -->
+    <div class="card glass-card">
+      <h2>Unit Live Tracking</h2>
+      <ul>
+        <li>Ambulance 1 → En route (ETA: 2 mins)</li>
+        <li>Fire Crew 2 → Reached site</li>
+        <li>Team 3 → Awaiting instructions</li>
+      </ul>
+    </div>
+
+    <!-- Emergency Camera Feeds -->
+    <div class="card glass-card">
+      <h2>Emergency Camera Views</h2>
+      <ul>
+        <li><a href="#">Cam 9 - Medical Bay</a></li>
+        <li><a href="#">Drone Feed - Incident Site</a></li>
+        <li><a href="#">Cam 11 - Exit Gate</a></li>
+      </ul>
+    </div>
+
+    <!-- Communication Panel -->
+    <div class="card glass-card">
+      <h2>Communication Panel</h2>
+      <textarea placeholder="Message to Security or Organizers..." class="neon-input" rows="3"></textarea>
+      <button class="glow-button">Send</button>
+    </div>
+  </div>
+</body>
+</html>

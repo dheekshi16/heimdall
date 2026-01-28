@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Event Organizers Dashboard | Project Heimdall</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../icon.jpg" type="image/png" />
+
+    
+  <script src="script.js"></script>
+
+  
+  <!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-container">
+    <h1 class="neon-glow">Event Organizers Dashboard</h1>
+
+
+    <!-- Add Event Section -->
+    <div class="card glass-card">
+      <h2>Add New Event</h2>
+      <input type="text" id="eventName" placeholder="Event Name" class="neon-input">
+      <input type="text" id="eventLocation" placeholder="Event Location" class="neon-input">
+      <button onclick="addEvent()" class="glow-button">+ Add Event</button>
+    </div>
+
+    <!-- Active Events Display -->
+    <div class="card glass-card">
+      <h2>Active Events</h2>
+      <ul id="eventList" class="event-list"></ul>
+    </div>
+
+    <!-- Keys Panel -->
+    <div class="card glass-card">
+      <h2>Access Keys</h2>
+      <p><strong>Security Key:</strong> SEC-327A</p>
+      <p><strong>Drone Key:</strong> DRN-522B</p>
+      <p><strong>Emergency Key:</strong> EMG-871Z</p>
+    </div>
+
+    <!-- Communication Panel -->
+    <div class="card glass-card">
+      <h2>Communication Panel</h2>
+      <textarea placeholder="Type message to all units..." class="neon-input" rows="3"></textarea>
+      <button class="glow-button">Send</button>
+    </div>
+
+    
+    <!-- Live Drone Map -->
+<div class="card glass-card">
+  <h2>HeatMap Drone Preview</h2>
+  <div id="droneMap" style="height: 300px; border-radius: 12px; overflow: hidden;"></div>
+</div>
+
+
+    <!-- Camera Feeds -->
+    <div class="card glass-card">
+      <h2>Live Camera Access</h2>
+      <ul>
+        <li><a href="#">Cam 1  - Entrance</a></li>
+        <li><a href="#">Cam 2 - Main Stage</a></li>
+        <li><a href="#">Drone 1 - Aerial</a></li>
+        <li><a href="#">Drone 2 - Perimeter</a></li>
+      </ul>
+    </div>
+
+    <!-- Lost Person Report -->
+    <div class="card glass-card">
+      <h2>Lost Person Reporting</h2>
+      <input type="file" class="neon-input" accept="image/*" />
+      <button class="glow-button">Upload for Drone Scan</button>
+    </div>
+
+    <!-- Event Summary Panel -->
+    <div class="card glass-card">
+      <h2>Event Summary</h2>
+      <p><strong>Status:</strong> Monitoring</p>
+      <p><strong>Crowd Level:</strong> Medium (Green-Yellow)</p>
+      <p><strong>Alerts:</strong> No critical alerts</p>
+    </div>
+
+    <!-- Post Event Report -->
+<div class="card glass-card">
+  <h2>Post Event Report</h2>
+  <button class="glow-button" onclick="generateReport()">Generate Report</button>
+</div>
+
+
+  <!-- Video Modal -->
+<div id="videoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center;">
+  <video id="modalVideo" controls autoplay style="max-width:90%; max-height:90%; border:5px solid #00ffd5; border-radius:12px;"></video>
+  <button onclick="closeModal()" style="position:absolute; top:20px; right:30px; background:#00ffd5; border:none; padding:10px 20px; font-weight:bold; border-radius:10px;">Close</button>
+</div>
+
+
+  <script>
+  // 1. Add Event
+  function addEvent() {
+    const name = document.getElementById('eventName').value.trim();
+    const location = document.getElementById('eventLocation').value.trim();
+    if (!name || !location) return alert('Please enter both name and location.');
+
+    const eventText = `${name} @ ${location}`;
+    
+    const li = document.createElement('li');
+    li.innerText = eventText;
+    document.getElementById('eventList').appendChild(li);
+
+    // Save to localStorage
+    let events = JSON.parse(localStorage.getItem('eventList') || '[]');
+    events.push(eventText);
+    localStorage.setItem('eventList', JSON.stringify(events));
+
+    // Toast Message
+    showToast(`✅ "${eventText}" added!`);
+
+    // Clear input
+    document.getElementById('eventName').value = '';
+    document.getElementById('eventLocation').value = '';
+  }
+
+  // 2. Load saved events on page load
+  window.onload = function () {
+    let events = JSON.parse(localStorage.getItem('eventList') || '[]');
+    const ul = document.getElementById('eventList');
+    events.forEach(event => {
+      const li = document.createElement('li');
+      li.innerText = event;
+      ul.appendChild(li);
+    });
+  }
+
+  // 3. Upload for Drone Scan (alert)
+  const uploadBtn = document.querySelector('.glow-button:nth-of-type(2)');
+  if (uploadBtn) {
+    uploadBtn.addEventListener('click', () => {
+      alert("📸 Face scan uploaded. Drone is now scanning...");
+    });
+    function uploadMissingPerson() {
+  const input = document.getElementById('missingPersonInput');
+  const file = input.files[0];
+  if (!file) return alert("Please select an image.");
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    localStorage.setItem("missingPersonImage", e.target.result); // Save image to localStorage
+    showToast("📸 Missing person uploaded for drone scan.");
+  };
+  reader.readAsDataURL(file);
+}
+
+  }
+
+  // 4. Communication Send Button
+  const sendBtn = document.querySelector('.glow-button:nth-of-type(3)');
+  const messageBox = document.querySelector('textarea[placeholder*="Type message"]');
+  if (sendBtn && messageBox) {
+    sendBtn.addEventListener('click', () => {
+      const msg = messageBox.value.trim();
+      if (!msg) return alert("⚠️ Type a message first.");
+      showToast(`📨 Sent: "${msg}"`);
+      messageBox.value = '';
+    });
+  }
+   // Real Camera Feed (fake video)
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const camText = e.target.innerText.toLowerCase(); // example: "cam 1 - entrance"
+    
+    // Extract the camera name to use as filename
+    const videoId = camText.includes("drone") ? 
+      camText.replace("drone", "drone").split(" ")[1] : 
+      camText.replace("cam", "cam").split(" ")[1];
+
+    const videoPath = `../assets/videos/${camText.includes("drone") ? `drone${videoId}.mp4` : `cam${videoId}.mp4`}`;
+
+    const videoModal = document.getElementById('videoModal');
+    const modalVideo = document.getElementById('modalVideo');
+
+    modalVideo.src = videoPath;
+    videoModal.style.display = 'flex';
+  });
+});
+
+// Close Modal
+function closeModal() {
+  const videoModal = document.getElementById('videoModal');
+  const modalVideo = document.getElementById('modalVideo');
+  modalVideo.pause();
+  modalVideo.src = '';
+  videoModal.style.display = 'none';
+}
+
+
+
+  // 6. Toast function
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.innerText = message;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '30px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.background = '#00ffd5';
+    toast.style.color = '#000';
+    toast.style.padding = '10px 20px';
+    toast.style.borderRadius = '10px';
+    toast.style.boxShadow = '0 0 15px rgba(0, 255, 213, 0.7)';
+    toast.style.zIndex = '9999';
+    toast.style.fontWeight = 'bold';
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+  }
+
+  function generateReport() {
+  const eventList = JSON.parse(localStorage.getItem('eventList') || '[]');
+  const latestEvent = eventList.length ? eventList[eventList.length - 1] : 'N/A';
+
+  const now = new Date();
+  const reportText = `
+📋 Project Heimdall - Event Summary Report
+----------------------------------------
+🗓 Date: ${now.toLocaleDateString()}  ⏰ Time: ${now.toLocaleTimeString()}
+📍 Latest Event: ${latestEvent}
+👥 Crowd Level: Medium (Green-Yellow)
+🚨 Alerts: No critical alerts
+📊 Status: Monitoring
+📝 Summary: All systems functioning normally. No security issues detected.
+
+Generated by Event Organizer Dashboard.
+`;
+
+  // Convert to downloadable .txt
+  const blob = new Blob([reportText], { type: 'text/plain' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `event-report-${now.getTime()}.txt`;
+  link.click();
+
+  showToast("📄 Report generated and downloaded!");
+}
+
+// 7. Initialize Drone Map
+const droneMap = L.map('droneMap').setView([11.0168, 76.9558], 15); // Coimbatore
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(droneMap);
+
+// Example drone location marker (you can later update dynamically)
+const droneIcon = L.icon({
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/1830/1830867.png',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
+
+L.marker([11.018, 76.957], { icon: droneIcon }).addTo(droneMap)
+  .bindPopup("<b>Drone 1</b><br>Monitoring Zone").openPopup();
+
+
+</script>
+
+  
+</body>
+</html>

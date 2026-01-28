@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Security Dashboard | Project Heimdall</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" href="../icon.jpg" type="image/png" />
+
+
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-container">
+    <h1 class="neon-glow">Security Management Dashboard</h1>
+
+    <!-- Smart Patrol Planner -->
+    <div class="card glass-card">
+      <h2>Smart Patrolling Routes</h2>
+      <select class="neon-input">
+        <option>Main Entrance → Stage → Exit</option>
+        <option>Perimeter Loop → VIP Zone</option>
+        <option>Stage → Medical Bay → Backstage</option>
+      </select>
+      <button class="glow-button">Assign Patrol</button>
+    </div>
+
+    <!-- Real-Time Alerts -->
+    <div class="card glass-card">
+      <h2>Real-Time Alerts</h2>
+      <ul>
+        <li>🔴 Suspicious activity near Gate B</li>
+        <li>🟡 Congestion forming at the exit</li>
+        <li>🟢 All clear in parking zone</li>
+      </ul>
+    </div>
+
+    <!-- Live Guard Status -->
+    <div class="card glass-card">
+      <h2>On-Duty Guard Status</h2>
+      <ul>
+        <li>Ravi - 🟢 Patrolling (Zone A)</li>
+        <li>Swetha - 🔴 Emergency call (VIP gate)</li>
+        <li>Arjun - 🟡 Standby</li>
+      </ul>
+    </div>
+
+    <!-- CCTV Feed Access -->
+    <div class="card glass-card">
+      <h2>Live CCTV Feeds</h2>
+      <ul>
+        <li><a href="#">Cam 3 - Food Court</a></li>
+        <li><a href="#">Cam 4 - Stage Area</a></li>
+        <li><a href="#">Cam 5 - Rear Exit</a></li>
+      </ul>
+    </div>
+
+    <!-- Incident Logging -->
+    <div class="card glass-card">
+      <h2>Report Incident</h2>
+      <textarea placeholder="Describe the issue..." class="neon-input" rows="3"></textarea>
+      <button class="glow-button">Log Incident</button>
+    </div>
+
+    <!-- Communication Panel -->
+    <div class="card glass-card">
+      <h2>Communication Panel</h2>
+      <textarea placeholder="Message to Command Center or Emergency..." class="neon-input" rows="3"></textarea>
+      <button class="glow-button">Send</button>
+    </div>
+  </div>
+</body>
+</html>
